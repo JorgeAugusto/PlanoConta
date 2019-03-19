@@ -30,7 +30,7 @@ sap.ui.define([
 			
 			if (this._operacao === "incluir"){
 				var oNovoPlano = {
-					"Id": 0,
+					"Codigo": "",
 					"Descricao": "",
 					"ClasseConta": "SINTETICA",
 					"Condicao": "CREDORA",
@@ -38,7 +38,7 @@ sap.ui.define([
 				};
 				
 				oJSONModel.setData(oNovoPlano);
-				
+	
 			} else if (this._operacao === "editar"){
 				oModel.read(oParam.sPath,{
 					success: function(oData) {
@@ -56,7 +56,7 @@ sap.ui.define([
 			var oHistory = History.getInstance();
 			var sPreviousHash = oHistory.getPreviousHash();
 			
-			if (this._checarCampos(this.getView())) {
+			if (this._checarCampos(this.getView()) === true) {
 				MessageBox.information("Preencher todos os campos obrigatórios!");
 				return;
 			}
@@ -114,7 +114,7 @@ sap.ui.define([
 			if(oView.byId("codigo").getValue() === "" || oView.byId("descricao").getValue() === ""){
 				return true;
 			} else{
-				return false; 
+				return false;
 			}
 		},
 		
