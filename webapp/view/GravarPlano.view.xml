@@ -1,0 +1,67 @@
+<mvc:View xmlns:core="sap.ui.core"
+xmlns:mvc="sap.ui.core.mvc"
+xmlns="sap.m"
+controllerName="br.com.idxtecPlanoConta.controller.GravarPlano"
+xmlns:html="http://www.w3.org/1999/xhtml"
+xmlns:f="sap.ui.layout.form">
+	<App>
+		<pages>
+			<Page title="Gravar Plano"
+				showNavButton="true"
+				navButtonPress="onVoltar">
+				<content>
+					<VBox class="sapUiSmallMargin">	
+						<f:SimpleForm id="SimpleFormChange480_Trial"
+						editable="true"
+						layout="ResponsiveGridLayout"
+						title="Novo Plano"
+						labelSpanXL="4"
+						labelSpanL="4"
+						labelSpanM="4"
+						labelSpanS="12"
+						adjustLabelSpan="false"
+						emptySpanXL="0"
+						emptySpanL="0"
+						emptySpanM="0"
+						emptySpanS="0"
+						columnsXL="3"
+						columnsL="2"
+						columnsM="2"
+						singleContainerFullSize="false">
+							<f:content>
+								<Label text="Código" labelFor="codigo"/>
+								<Input id="codigo" value="{model>/Codigo}" required="true"/>
+						
+								<Label text="Descrição" labelFor="descricao"/>
+								<Input id="descricao" value="{model>/Descricao}" required="true"/>
+								
+								<Label text="Classe da conta" labelFor="classeconta" required="true"/>
+								<Select selectedKey="{model>/ClasseConta}"
+									id="classeconta"> 
+									<core:Item key="SINTETICA" text="SINTÉTICA"/>
+									<core:Item key="ANALITICA" text="ANALÍTICA"/>
+								</Select>
+								
+								<Label text="Condição" labelFor="condicao" required="true"/>
+								<Select selectedKey="{model>/Condicao}"
+									id="condicao"> 
+									<core:Item key="CREDORA" text="CREDORA"/>
+									<core:Item key="DEVEDORA" text="DEVEDORA"/>
+								</Select>
+								
+								<Label text="Bloqueada" labelFor="bloqueada"/>
+								<CheckBox selected="{model>/Bloqueada}"/>
+							</f:content>
+						</f:SimpleForm>
+					</VBox>
+				</content>
+				<footer>
+					<Toolbar>
+						<ToolbarSpacer/>
+						<Button id="salvar" text="Salvar" press="onSalvar" class="sapUiSmallMarginEnd"/>
+					</Toolbar>
+				</footer>
+			</Page>
+		</pages>
+	</App>
+</mvc:View>
