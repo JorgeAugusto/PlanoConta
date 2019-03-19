@@ -24,11 +24,18 @@ sap.ui.define([
 			var oParam = this.getOwnerComponent().getModel("parametros").getData();
 			var oJSONModel = this.getOwnerComponent().getModel("model");
 			var oModel = this.getOwnerComponent().getModel();
+			var oViewModel = this.getOwnerComponent().getModel("view");
 			
 			this._operacao = oParam.operacao;
 			this._sPath = oParam.sPath;
 			
 			if (this._operacao === "incluir"){
+				
+				oViewModel.setData({
+					titulo: "Incluir Nova Conta Contabil",
+					codigoEdit: true
+				});
+				
 				var oNovoPlano = {
 					"Codigo": "",
 					"Descricao": "",
@@ -40,6 +47,12 @@ sap.ui.define([
 				oJSONModel.setData(oNovoPlano);
 	
 			} else if (this._operacao === "editar"){
+				
+				oViewModel.setData({
+					titulo: "Editar Conta Contabil",
+					codigoEdit: false
+				});
+					
 				oModel.read(oParam.sPath,{
 					success: function(oData) {
 						oJSONModel.setData(oData);
@@ -52,10 +65,6 @@ sap.ui.define([
 		},
 		
 		onSalvar: function(){
-			var oRouter = sap.ui.core.UIComponent.getRouterFor(this);
-			var oHistory = History.getInstance();
-			var sPreviousHash = oHistory.getPreviousHash();
-			
 			if (this._checarCampos(this.getView()) === true) {
 				MessageBox.information("Preencher todos os campos obrigatórios!");
 				return;
@@ -63,22 +72,26 @@ sap.ui.define([
 			
 			if (this._operacao === "incluir") {
 				this._createPlan();
-				if (sPreviousHash !== undefined) {
-					window.history.go(-1);
-				} else {
-					oRouter.navTo("planoconta", {}, true);
-				}
 			} else if (this._operacao === "editar") {
 				this._updatePlan();
-				if (sPreviousHash !== undefined) {
-					window.history.go(-1);
-				} else {
-					oRouter.navTo("planoconta", {}, true);
-				}
+			}
+		},
+		
+		_goBack: function() {
+			var oRouter = sap.ui.core.UIComponent.getRouterFor(this);
+			var oHistory = History.getInstance();
+			var sPreviousHash = oHistory.getPreviousHash();
+			
+			if (sPreviousHash !== undefined) {
+				window.history.go(-1);
+			} else {
+				oRouter.navTo("planoconta", {}, true);
 			}
 		},
 		
 		_createPlan: function() {
+			var that = this;
+		
 			var oModel = this.getOwnerComponent().getModel();
 			var oJSONModel = this.getOwnerComponent().getModel("model");
 			
@@ -86,15 +99,22 @@ sap.ui.define([
 			
 			oModel.create("/PlanoContas", oDados, {
 				success: function() {
-					MessageBox.success("Dados gravados.");
+					MessageBox.success("Dados gravados.",{
+						onClose: function(sAction) {
+							that._goBack();
+						}
+					});
 				},
 				error: function(oError) {
-					MessageBox.error(oError.responseText);
+					var sError = JSON.parse( oError.responseText).error.message.value; 
+					MessageBox.error(sError);
 				}
 			});
 		},
 		
 		_updatePlan: function() {
+			var that = this;
+			
 			var oModel = this.getOwnerComponent().getModel();
 			var oJSONModel = this.getOwnerComponent().getModel("model");
 			
@@ -102,10 +122,15 @@ sap.ui.define([
 			
 			oModel.update(this._sPath, oDados, {
 					success: function() {
-					MessageBox.success("Dados gravados.");
+					MessageBox.success("Dados gravados.", {
+						onClose: function() {
+							that._goBack();
+						}
+					});
 				},
 				error: function(oError) {
-					MessageBox.error(oError.responseText);
+					var sError = JSON.parse( oError.responseText).error.message.value; 
+					MessageBox.error(sError);
 				}
 			});
 		},

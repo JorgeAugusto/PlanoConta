@@ -8,7 +8,15 @@ sap.ui.define([
 
 		createDeviceModel: function() {
 			var oModel = new JSONModel(Device);
-			oModel.setDefaultBindingMode("OneWay");
+			oModel.setDefaultBindingMode("TwoWay");
+			return oModel;
+		},
+		
+		createViewModel: function() {
+			var oModel = new JSONModel({
+				titulo : "",
+				codigoEdit: true
+			});
 			return oModel;
 		}
 

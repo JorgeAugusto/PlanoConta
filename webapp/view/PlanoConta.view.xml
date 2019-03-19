@@ -6,14 +6,14 @@ xmlns="sap.m"
 xmlns:t="sap.ui.table">
 	<App id="app">
 		<pages>
-			<Page>
+			<Page title="Plano de Conta">
 				<content>
 					<t:Table id="tablePlanoConta"
 						rows="{path: '/PlanoContas'}"
 						alternateRowColors="true">
 						<t:toolbar>
 							<Toolbar>
-								<Title text="Planos de conta"/>
+								<Title text="Lista de Contas Contabil"/>
 							</Toolbar>
 						</t:toolbar>
 						<t:columns>

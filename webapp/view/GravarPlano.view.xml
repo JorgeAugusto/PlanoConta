@@ -6,7 +6,7 @@ xmlns:html="http://www.w3.org/1999/xhtml"
 xmlns:f="sap.ui.layout.form">
 	<App>
 		<pages>
-			<Page title="Gravar Plano"
+			<Page title="Plano de Conta"
 				showNavButton="true"
 				navButtonPress="onVoltar">
 				<content>
@@ -14,7 +14,7 @@ xmlns:f="sap.ui.layout.form">
 						<f:SimpleForm id="SimpleFormChange480_Trial"
 						editable="true"
 						layout="ResponsiveGridLayout"
-						title="Novo Plano"
+						title="{view>/titulo}"
 						labelSpanXL="4"
 						labelSpanL="4"
 						labelSpanM="4"
@@ -30,7 +30,7 @@ xmlns:f="sap.ui.layout.form">
 						singleContainerFullSize="false">
 							<f:content>
 								<Label text="Código" labelFor="codigo"/>
-								<Input id="codigo" value="{model>/Codigo}" required="true"/>
+								<Input id="codigo" value="{model>/Codigo}" required="true" editable="{view>/codigoEdit}"/>
 						
 								<Label text="Descrição" labelFor="descricao"/>
 								<Input id="descricao" value="{model>/Descricao}" required="true"/>
