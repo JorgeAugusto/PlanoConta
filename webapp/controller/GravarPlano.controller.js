@@ -15,7 +15,7 @@ sap.ui.define([
 			
 			this._operacao = null;
 			this._sPath = null;
-			
+
 			var oJSONModel = new JSONModel();
 			this.getOwnerComponent().setModel(oJSONModel,"model");
 		},
@@ -25,14 +25,14 @@ sap.ui.define([
 			var oJSONModel = this.getOwnerComponent().getModel("model");
 			var oModel = this.getOwnerComponent().getModel();
 			var oViewModel = this.getOwnerComponent().getModel("view");
-			
+
 			this._operacao = oParam.operacao;
 			this._sPath = oParam.sPath;
 			
 			if (this._operacao === "incluir"){
 				
 				oViewModel.setData({
-					titulo: "Incluir Nova Conta Contabil",
+					titulo: "Inserir Nova Conta Contabil",
 					codigoEdit: true
 				});
 				
@@ -45,7 +45,7 @@ sap.ui.define([
 				};
 				
 				oJSONModel.setData(oNovoPlano);
-	
+				
 			} else if (this._operacao === "editar"){
 				
 				oViewModel.setData({
@@ -66,7 +66,7 @@ sap.ui.define([
 		
 		onSalvar: function(){
 			if (this._checarCampos(this.getView()) === true) {
-				MessageBox.information("Preencher todos os campos obrigatórios!");
+				MessageBox.information("Preencha todos os campos obrigatórios!");
 				return;
 			}
 			
@@ -99,7 +99,7 @@ sap.ui.define([
 			
 			oModel.create("/PlanoContas", oDados, {
 				success: function() {
-					MessageBox.success("Dados gravados.",{
+					MessageBox.success("Conta contábil inserida com sucesso!",{
 						onClose: function(sAction) {
 							that._goBack();
 						}
@@ -122,7 +122,7 @@ sap.ui.define([
 			
 			oModel.update(this._sPath, oDados, {
 					success: function() {
-					MessageBox.success("Dados gravados.", {
+					MessageBox.success("Conta contábil alterada com sucesso!", {
 						onClose: function() {
 							that._goBack();
 						}
@@ -144,15 +144,7 @@ sap.ui.define([
 		},
 		
 		onVoltar: function(){
-			var oRouter = sap.ui.core.UIComponent.getRouterFor(this);
-			var oHistory = History.getInstance();
-			var sPreviousHash = oHistory.getPreviousHash();
-		
-			if (sPreviousHash !== undefined) {
-				window.history.go(-1);
-			} else {
-				oRouter.navTo("planoconta", {}, true);
-			}
+			this._goBack();
 		}
 	});
 
