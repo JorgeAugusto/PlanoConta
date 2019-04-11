@@ -2,8 +2,9 @@ sap.ui.define([
 	"sap/ui/core/mvc/Controller",
 	"sap/ui/core/routing/History",
 	"sap/m/MessageBox",
-	"sap/ui/model/json/JSONModel"
-], function(Controller, History, MessageBox, JSONModel) {
+	"sap/ui/model/json/JSONModel",
+	"br/com/idxtecPlanoConta/services/Session"
+], function(Controller, History, MessageBox, JSONModel, Session) {
 	"use strict";
 
 	return Controller.extend("br.com.idxtecPlanoConta.controller.GravarPlano", {
@@ -41,7 +42,11 @@ sap.ui.define([
 					"Descricao": "",
 					"ClasseConta": "SINTETICA",
 					"Condicao": "CREDORA",
-					"Bloqueada": false
+					"Bloqueada": false,
+					"Empresa" : Session.get("EMPRESA_ID"),
+					"Usuario": Session.get("USUARIO_ID"),
+					"EmpresaDetails": { __metadata: { uri: "/Empresas(" + Session.get("EMPRESA_ID") + ")"}},
+					"UsuarioDetails": { __metadata: { uri: "/Usuarios(" + Session.get("USUARIO_ID") + ")"}}
 				};
 				
 				oJSONModel.setData(oNovoPlano);
@@ -56,9 +61,6 @@ sap.ui.define([
 				oModel.read(oParam.sPath,{
 					success: function(oData) {
 						oJSONModel.setData(oData);
-					},
-					error: function(oError) {
-						MessageBox.error(oError.responseText);
 					}
 				});
 			}
@@ -66,7 +68,7 @@ sap.ui.define([
 		
 		onSalvar: function(){
 			if (this._checarCampos(this.getView()) === true) {
-				MessageBox.information("Preencha todos os campos obrigatórios!");
+				MessageBox.warning("Preencha todos os campos obrigatórios!");
 				return;
 			}
 			
@@ -89,48 +91,41 @@ sap.ui.define([
 			}
 		},
 		
+		_getDados: function(){
+			var oJSONModel = this.getOwnerComponent().getModel("model");
+			var oDados = oJSONModel.getData();
+			
+			return oDados;
+		},
+		
 		_createPlan: function() {
 			var that = this;
 		
 			var oModel = this.getOwnerComponent().getModel();
-			var oJSONModel = this.getOwnerComponent().getModel("model");
 			
-			var oDados = oJSONModel.getData();
 			
-			oModel.create("/PlanoContas", oDados, {
+			oModel.create("/PlanoContas", this._getDados(), {
 				success: function() {
 					MessageBox.success("Conta contábil inserida com sucesso!",{
 						onClose: function(sAction) {
 							that._goBack();
 						}
 					});
-				},
-				error: function(oError) {
-					var sError = JSON.parse( oError.responseText).error.message.value; 
-					MessageBox.error(sError);
 				}
 			});
 		},
 		
 		_updatePlan: function() {
 			var that = this;
-			
 			var oModel = this.getOwnerComponent().getModel();
-			var oJSONModel = this.getOwnerComponent().getModel("model");
 			
-			var oDados = oJSONModel.getData();
-			
-			oModel.update(this._sPath, oDados, {
+			oModel.update(this._sPath, this._getDados(), {
 					success: function() {
 					MessageBox.success("Conta contábil alterada com sucesso!", {
 						onClose: function() {
 							that._goBack();
 						}
 					});
-				},
-				error: function(oError) {
-					var sError = JSON.parse( oError.responseText).error.message.value; 
-					MessageBox.error(sError);
 				}
 			});
 		},
